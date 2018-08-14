@@ -1,6 +1,8 @@
 Samegame - Python3
 ========
 
+This is my solution for the (German) programming contest: https://pwb.asta-wedel.de/SS15-SameGame/index.html
+
 You need:
 - `python3`
 - In near future probably `numpy`

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Samegame viewer</title>
+<script type="text/javascript">
+var t;
+var currentFrame = 0;
+var running = false;
+var frames;
+
+function updateInput()
+{
+	inString = document.getElementById("in").value;
+
+	if(inString.indexOf("\r\n") != -1)
+	{
+		frames = inString.split("\r\n\r\n");
+	}
+	else
+	{
+		frames = inString.split("\n\n");
+	}
+
+	document.getElementById("numOfFrames").value = frames.length;
+
+	showCurrentFrame();
+}
+
+function showCurrentFrame()
+{
+	document.getElementById("out").value = frames[currentFrame];
+}
+
+function showNextFrame()
+{
+	currentFrame = (currentFrame + 1) % frames.length;
+	document.getElementById("out").value = frames[currentFrame];
+	document.getElementById("currentFrame").value = currentFrame;
+}
+
+function showPreviousFrame()
+{
+	if(currentFrame > 0)
+	{
+		currentFrame = (currentFrame - 1) % frames.length;
+	}
+	else
+	{
+		currentFrame = frames.length - 1;
+	}
+	document.getElementById("out").value = frames[currentFrame];
+	document.getElementById("currentFrame").value = currentFrame;
+}
+
+function playAnimation()
+{
+	t = window.setInterval(showNextFrame, document.getElementById("speed").value);
+	running = true;
+}
+
+function pauseAnimation()
+{
+	window.clearInterval(t);
+	running = false;
+}
+
+function pausePlayAnimation()
+{
+	if(running)
+	{
+		pauseAnimation();
+	}
+	else
+	{
+		playAnimation();
+	}
+}
+
+function stopAnimation()
+{
+	pauseAnimation();
+	currentFrame = 0;
+	showCurrentFrame();
+	document.getElementById("currentFrame").value = currentFrame;
+}
+</script>
+<style type="text/css">
+input {width: 4em;}
+</style>
+</head>
+<body onload="updateInput()">
+<h1>Samegame viewer</h1>
+<p>Enter the frames in the left large textfield, separated by an empty line. The animation starts in the right field.</p>
+
+<p>
+<button onclick="pausePlayAnimation();" type="button" id="play">Play/Pause</button>
+<button onclick="stopAnimation();" type="button" id="stop">Stop</button>
+<button onclick="showPreviousFrame();" type="button" id="back">back</button>
+<button onclick="showNextFrame();" type="button" id="forward">forward</button>
+</p>
+
+<p>
+ms per frame: <input type="number" id="speed" value="250" />
+# Frames: <input type="text" id="numOfFrames" value="0" readonly="readonly" />
+current Frame: <input type="text" id="currentFrame" value="0" readonly="readonly" />
+</p>
+
+<textarea id="in" cols="50" rows="30" onchange="updateInput()" onkeyup="updateInput()"></textarea>
+<textarea id="out" cols="50" rows="30" readonly="readonly"></textarea>
+
+
+
+</body>
+</html>
